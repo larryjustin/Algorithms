@@ -1,0 +1,11 @@
+0. Which of the following sorting algorithms are (or can be made) stable?
+   (a) mergesort
+   (b) quicksort with the first element as pivot
+   (c) quicksort with randomized pivot
+   (d) selection sort
+   (e) insertion sort
+   (f) heap sort --- not covered yet (see CLRS Ch. 6)
+
+   A: Mergesort, Quicksort and Insertion sort
+
+

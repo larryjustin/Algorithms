@@ -1,0 +1,272 @@
+from heapq import heapify, heappop, heappush, nsmallest
+from collections import defaultdict
+
+
+def best(n):
+    i, j = 0, len(n)
+    d = {'': [0, ''], 'A': [0, '.'], 'U': [0, '.'], 'C': [0, '.'], 'G': [0, '.']}
+
+    rna = {'AU', 'GC', 'GU', 'UA', 'CG', 'UG'}
+
+    def find(i, j):
+        if n[i:j] in d:
+            return d[n[i:j]]
+
+        matched = []
+        for k in range(i+1, j):
+            if (n[i] + n[k]) in rna:  # if they make a pair
+                sum, path = find(i+1, k)   # find between i and k
+                sum1, path1 = find(k+1, j)   # find from k+1 to j
+                if not matched or sum + sum1 + 1 > matched[0]:   # update the best match
+                    matched = [sum + sum1 + 1, '(' + str(path) + ')' + str(path1)]
+
+        maximum = matched if matched else [0,'.' * len(n[i:j])]   # all dots if no match
+
+        next_sum, next_path = find(i+1, j)
+        next_com = [next_sum, '.' + str(next_path)]
+
+        d[n[i:j]] = max(maximum, next_com, key=lambda x: x[0])
+
+        return d[n[i:j]]
+
+    return find(i, j)
+
+
+def total(n):
+
+    i, j = 0, len(n)
+    d = {'': 1, 'A': 1, 'U': 1, 'C': 1, 'G': 1}   # format: sum, possibilities, path
+    rna = {'AU', 'GC', 'GU', 'UA', 'CG', 'UG'}
+
+    def find(i, j):
+        if n[i:j] in d:
+            return d[n[i:j]]
+
+        matched = 0
+        for k in range(i + 1, j):
+            if (n[i] + n[k]) in rna:  # if they make a pair
+                sum = find(i + 1, k)  # find between i and k
+                sum1 = find(k + 1, j)  # find from k+1 to j
+                matched += (sum * sum1)
+
+        next_sum = find(i + 1, j)
+
+        d[n[i:j]] = matched + next_sum
+
+        return d[n[i:j]]
+
+    return find(i, j)
+
+
+def kbest(n, k):
+
+    i, j = 0, len(n)
+    d = {'': [[0, '']], 'A': [[0, '.']], 'U': [[0, '.']], 'C': [[0, '.']], 'G': [[0, '.']]}   # format: sum, possibilities, paths(a lot)
+    # dict_best = defaultdict(-1)
+    rna = {'AU', 'GC', 'GU', 'UA', 'CG', 'UG'}
+
+    def find(i, j):
+
+        if n[i:j] in d:
+            return d[n[i:j]]
+
+        matrix = []
+        heap = []
+        check_set = set()
+
+        for l in range(i+1, j):
+            a, b = [], []
+            matched = []
+            if (n[i] + n[l]) in rna:  # if they make a pair
+                a = find(i+1, l)    # find between i and l
+                b = find(l+1, j)    # find from l+1 to j
+
+            if a or b: matched = [a,b,len(matrix)]
+
+            if matched:
+                matrix.append(matched)
+                ll = len(matrix)-1
+                heap.append([matrix[ll][0][0][0] + matrix[ll][1][0][0] - 1,'('+ matrix[ll][0][0][1] + ')'+ matrix[ll][1][0][1], matrix[ll][2], 0, 0])
+                check_set.add((ll, 0, 0))
+
+        nex = find(i+1, j)
+        # heap = [[matrix[i][0][0][0] + matrix[i][1][0][0] - 1,'('+ matrix[i][0][0][1] + ')'+ matrix[i][1][0][1], matrix[i][2], 0, 0] for i, a in enumerate(matrix)]
+        last = len(matrix)
+        # for i in range(last):
+        #     check_set.add((i, 0, 0))
+        heap.append([nex[0][0], '.' + nex[0][1], last, 0])
+        check_set.add((last, 0, 0))
+        # print("M:", last, matrix)
+        # print("C:", check_set)
+        heapify(heap)
+        temp = []
+
+        while heap:
+
+            if len(temp) >= k: break
+
+            popped = heappop(heap)
+            # print(popped, heap)
+
+            if len(popped) == 5: # from matched
+
+                summ, path, m_id, a, b = popped
+
+                # if (m_id, a, b) not in check_set:
+                temp.append([summ, path])
+                # check_set.add((m_id, a, b))
+
+                curr = matrix[m_id]
+
+                if a + 1 < len(curr[0]) and (m_id, a+1, b) not in check_set:
+                    heappush(heap, [matrix[m_id][0][a+1][0] + matrix[m_id][1][b][0] - 1 ,'('+ matrix[m_id][0][a+1][1] + ')'+ matrix[m_id][1][b][1], matrix[m_id][2], a+1, b])
+                    check_set.add((m_id, a+1, b))
+                if b + 1 < len(curr[1]) and (m_id, a, b+1) not in check_set:
+                    heappush(heap, [matrix[m_id][0][a][0] + matrix[m_id][1][b+1][0] - 1,'(' + matrix[m_id][0][a][1] + ')' + matrix[m_id][1][b+1][1], matrix[m_id][2], a, b+1])
+                    check_set.add((m_id, a, b+1))
+            else:  # from nex
+
+                summ, path, m_id, idx = popped
+
+                temp.append([summ, path])
+
+                if idx + 1 < len(nex) and (m_id, idx+1, 0) not in check_set:
+                    heappush(heap, [nex[idx+1][0], '.' + nex[idx+1][1], m_id, idx+1])
+                    check_set.add((m_id, idx+1, 0))
+
+            # print("C SET: ",check_set)
+
+        d[n[i:j]] = temp
+        # print(temp)
+        return temp
+
+    f = find(i, j)
+
+    f = [[i*-1, _] for i, _ in f ]
+    # print(d)
+
+    return f
+
+
+# print(kbest('AGGCAUCAAACCCUGCAUGGGAGCG',10))
+print(best('ACAGU'))
+print(total('ACAGU'))
+print(kbest('ACAGU', 10))
+
+'''
+allowed = {'AU', 'UA', 'CG', 'GC', 'GU', 'UG'}
+
+
+def best(x):
+
+    def _best(i, j):
+        if (i, j) in opt:
+            return opt[i, j]
+        curr = 0
+        for k in range(i, j):
+            curr = max(curr, _best(i, k) + _best(k+1, j))
+        if x[i] + x[j] in allowed:
+            curr = max(curr, _best(i+1, j-1) + 1)
+        opt[i, j] = curr
+        return curr
+
+    opt = defaultdict(int)
+    n = len(x)
+    for i in range(n):
+        opt[i, i] = 0
+        opt[i, i-1] = 0
+
+    return _best(0, n-1)
+'''
+
+ in class example:
+
+ allowed = {'AU', 'UA', 'CG', 'GU', 'UG'}
+
+
+def best2(x):
+
+    def _best2(i, j):
+        if (i, j) in opt:
+            return opt[i, j]
+        curr = -1
+        for s in range(i, j):  # binary split
+            if _best2(i, s) + _best2(s+1, j) > curr:
+                curr = _best2(i, s) + _best2(s+1, j)
+                back[i, j] = s
+
+        if x[i] + x[j] in allowed:  # unary pair
+            if _best2(i+1, j-1) + 1 > curr:
+                curr = _best2(i+1, j-1) + 1
+                back[i, j] = -1
+            opt[i, j] = curr
+            return curr
+
+        def solution(i, j):
+            if i == j:  # singleton
+                return "."
+            if i > j:  # empty
+                return ""
+            k = back[i, j]
+            if k == -1:
+                return "(%s)" % solution(i+1, j-1)
+            else:
+                return solution(i, k) + solution(k+1, j)
+
+    opt = defaultdict(int)
+    back = {}
+    n = len(x)
+    for i in range(n):
+        opt[i, j] = 0
+        opt[i, i-1] = 0
+
+    return _best2(0, n-1), solution(0, n-1)
+
+
+def kbest(x, k):
+
+    def _kbest(i, j):
+        def trypush_binary(s, p, q):
+            if p < len(topk[i, s]) and q < len(topk[s+1, j]) and (s, p, q) not in visited:
+                heappush(h, (-(topk[i, s][p][0] + topk[s+1, j][q][0]), (s, p, q)))
+                visited.add((s, p, q))
+
+        def trypush_unary(p):
+            if p < len(topk[i+1, j-1]):
+                heappush(h, (- (topk[i+1, j-1][p][0] + 1), (p,)))  # +1 for (i, j) pairs
+
+        if (i, j) in topk:
+            return topk[i, j]
+        h = []
+        visited = set()
+        for s in range(i, j):  # binary split
+            _kbest(i, s)
+            _kbest(s+1, j)
+            trypush_binary(s, 0, 0)
+
+        if x[i] + x[j] in allowed:  # unary pair
+            _kbest(i+1, j-1)
+            trypush_unary(0)
+
+        for _ in range(k):  # collect top k solutions
+            if h == []:
+                break
+            score, indices = heappop(h)  # score is negated
+            try:
+                s, p, q = indices  # try interpret as binary
+                top[i, j].append((-score, "%s%s" % (topk[i, s][p][1], topk[s+1, j][q][1])))
+                trypush_binary(s, p+1, q)
+                trypush_binary(s, p, q+1)
+
+            except:
+                p = indices[0]
+                topk[i, j].append((-score, "(%s)" % topk[i+1, j-1][p][1]))
+                trypush_unary(p+1)
+
+    topk = defaultdict(list)
+    n = len(x)
+    for i in range(n):
+        topk[i, i] = [(0, '.')]  # singleton
+        topk[i, i-1] = [(0, '')]  # empty span
+    _kbest(0, n-1)
+    return topk[0, n-1]

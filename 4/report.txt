@@ -1,0 +1,65 @@
+0. There are two methods for building a heap from an unsorted array:
+   (1) insert each element into the heap  --- O(nlogn) -- heapq.heappush()
+   (2) heapify (top-down)                 --- O(n)     -- heapq.heapify()
+
+Page 159 in the book. Also:
+https://fossies.org/dox/Python-3.8.0/heapq_8py_source.html
+https://docs.python.org/3/library/timeit.html
+http://www.cs.umd.edu/~meesh/351/mount/lectures/lect14-heapsort-analysis-part.pdf
+
+   (a) Derive these time complexities.
+
+insert:
+The algorithm takes O(n log n) to push all the items onto the heap, and then O((n-k) log n)
+to find the kth largest element. So the complexity would be O(n log n).
+
+heapify:
+The algorithm divides and conquers which takes O(log n) time, but also has to bubble up or down depending.
+Due to this, the algorithm must access every element of the array at least once, so the complexity is O(n).
+
+   (b) Use a long list of random numbers to show the difference in time. (Hint: random.shuffle or random.sample)
+
+I tried using timeit. Here is the code:
+
+import heapq
+import timeit
+
+
+def test1():
+    a = list(range(1000000))
+    random.shuffle(a)
+    heapq.heapify(a)
+
+
+def test2():
+    a = list(range(1000000))
+    random.shuffle(a)
+    heap = []
+    for x in a:
+        heapq.heappush(heap, x)
+
+
+print(timeit.timeit("test1", globals=globals()))
+print(timeit.timeit("test2", globals=globals()))
+
+results in:
+
+0.025991990999999937
+0.023070185999999993
+
+
+   (c) What about sorted or reversely-sorted numbers?
+insert:
+sorted: O(n)
+reversely-sorted: O(n log n)
+
+heapify:
+sorted: O(n)
+reversely-sorted: O(n)
+
+
+   Q: What is your complexity? Write down the detailed analysis in report.txt.
+The real complexity analysis takes place in the for loop where the push and pop occurs. From what I have
+learned this week, this will result in an over all complexity of O(n log n)
+
+

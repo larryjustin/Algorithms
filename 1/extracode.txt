@@ -1,0 +1,65 @@
+selection sort code examples:
+
+
+
+"""
+def qselect(i, a):
+    if not a:
+        return []
+    else:
+        pivot = random.choice(a)
+        left = [x for x in a if x < pivot]
+        right = [x for x in a[1:] if x >= pivot]
+        k = len(left) + 1
+#        k2 = len(right)
+        if i < k:
+            return qselect(i, left)
+        elif i > k:
+            return qselect(i - k, right)
+        else:
+            return pivot
+
+
+#        if i == k:
+#            return pivot
+#        elif i < k:
+#            return qselect(i, left)
+#        else:
+#            return qselect(i-k, right)
+"""
+
+
+"""def qselect(k, array):
+    n = k-1
+
+    def partition(left, right, pivotIndex):
+        pivotValue = array[pivotIndex]
+
+        array[pivotIndex], array[right] = array[right], array[pivotIndex]
+        storeIndex = left
+        for i in range(left, right):
+            if array[i] < pivotValue:
+                array[storeIndex], array[i] = array[i], array[storeIndex]
+                storeIndex += 1
+
+        array[right], array[storeIndex] = array[storeIndex], array[right]
+        return storeIndex
+
+    def select(left, right):
+        if left == right:
+            return array[left]
+        pivotIndex = random.randint(left, right)
+        pivotIndex = partition(left, right, pivotIndex)
+
+        if n == pivotIndex:
+            return array[n]
+        elif n < pivotIndex:
+            return select(left, pivotIndex-1)
+        else:
+            return select(pivotIndex+1, right)
+
+    return select(0, len(array)-1)
+
+"""
+
+

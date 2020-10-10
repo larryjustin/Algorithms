@@ -1,0 +1,26 @@
+0. Q: What's the best-case, worst-case, and average-case time complexities of quicksort.
+Briefly explain each case.
+
+A: Best-case: O(nlgn) The list is completely randomized.
+   Worst-case: O(n^2) The list that you are sorting is already sorted in a completely backwards
+   way from how you want to sort it.
+   Average-case: O(nlgn) The chances of a list being completely sorted is so unlikely that
+   the average case is very close to the best case.
+
+Q: What's the best-case, worst-case, and average-case time complexities? Briefly explain. (qselect)
+
+A: Best-case: O(n) The pivot happens to be the correct element.
+   Worst-case: O(n^2) Like quicksort, the list requires transversing every element. The pivot happens
+   to be the last element.
+   Average-case: O(n) The pivot is not the correct element until it is the last element. The list
+   is halved every recursion.
+
+Q: What are the time complexities for the operations implemented?
+
+A: sorted(t): O(nlgn)
+   search(t, x): O(n)
+   insert(t, x): O(n)
+
+
+
+

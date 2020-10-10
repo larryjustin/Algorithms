@@ -1,0 +1,148 @@
+
+HW10 - Challenge Problem - RNA Structure Prediction (6%)
+This problem combines dynamic programming and priority queues.
+
+
+Textbooks for References:
+[1] KT Ch. 6.5 (DP over intervals -- RNA structure)    
+[2] KT slides: DP I (RNA section)
+    http://www.cs.princeton.edu/~wayne/kleinberg-tardos/
+
+***Please analyze time/space complexities for each problem in report.txt.
+
+1. Given an RNA sequence, such as ACAGU, we can predict its secondary structure 
+   by tagging each nucleotide as (, ., or ). Each matching pair of () must be 
+   AU, GC, or GU (or their mirror symmetries: UA, CG, UG). 
+   We also assume pairs can _not_ cross each other. 
+   The following are valid structures for ACAGU:
+
+   ACAGU
+   .....
+   ...()
+   ..(.)
+   .(.).
+   (...)
+   ((.))    
+
+   We want to find the structure with the maximum number of matching pairs. 
+   In the above example, the last structure is optimal (2 pairs). 
+
+   >>> best("ACAGU")
+   (2, '((.))')
+
+   Tie-breaking: arbitrary. Don't worry as long as your structure
+   is one of the correct best structures.
+
+   some other cases (more cases at the bottom):
+
+   GCACG
+   (2, '().()')
+   UUCAGGA
+   (3, '(((.)))')
+   GUUAGAGUCU
+   (4, '(.()((.)))')
+   AUAACCUUAUAGGGCUCUG
+   (8, '.(((..)()()((()))))')
+   AACCGCUGUGUCAAGCCCAUCCUGCCUUGUU
+   (11, '(((.(..(.((.)((...().))()))))))')
+   GAUGCCGUGUAGUCCAAAGACUUCACCGUUGG
+   (14, '.()()(()(()())(((.((.)(.))()))))')
+   CAUCGGGGUCUGAGAUGGCCAUGAAGGGCACGUACUGUUU
+   (18, '(()())(((((.)))()(((())(.(.().()()))))))')
+   ACGGCCAGUAAAGGUCAUAUACGCGGAAUGACAGGUCUAUCUAC
+   (19, '.()(((.)(..))(((.()()(())))(((.)((())))))())')
+   AGGCAUCAAACCCUGCAUGGGAGCACCGCCACUGGCGAUUUUGGUA
+   (20, '.(()())...((((()()))((()(.()(((.)))()())))))()')
+
+2. Total number of all possible structures
+
+   >>> total("ACAGU")
+   6
+
+3. k-best structures: output the 1-best, 2nd-best, ... kth-best structures.
+
+   >>> kbest("ACAGU", 3)
+   [(2, '((.))'), (1, '(...)'), (1, '.(.).')]
+   
+   The list must be sorted. 
+   Tie-breaking: arbitrary.
+
+   In case the input k is bigger than the number of possible structures, output all.
+
+   Sanity check: kbest(s, 1)[0][0] == best(s)[0] for each RNA sequence s.
+
+All three functions should be in one file: rna.py.
+
+See more testcases at the end.
+   
+
+
+TESTCASES:
+
+for each sequence s, we list three lines:
+best(s)
+total(s)
+kbest(s, 10)
+
+
+
+ACAGU
+(2, '((.))')
+6
+[(2, '((.))'), (1, '.(.).'), (1, '..(.)'), (1, '...()'), (1, '(...)'), (0, '.....')]
+------
+AC
+(0, '..')
+1
+[(0, '..')]
+------
+GUAC
+(2, '(())')
+5
+[(2, '(())'), (1, '()..'), (1, '.().'), (1, '(..)'), (0, '....')]
+------
+GCACG
+(2, '().()')
+6
+[(2, '().()'), (1, '(..).'), (1, '()...'), (1, '.(..)'), (1, '...()'), (0, '.....')]
+------
+CCGG
+(2, '(())')
+6
+[(2, '(())'), (1, '(.).'), (1, '.().'), (1, '.(.)'), (1, '(..)'), (0, '....')]
+------
+CCCGGG
+(3, '((()))')
+20
+[(3, '((()))'), (2, '((.)).'), (2, '(.()).'), (2, '.(()).'), (2, '.(().)'), (2, '.((.))'), (2, '((.).)'), (2, '(.(.))'), (2, '(.().)'), (2, '((..))')]
+------
+UUCAGGA
+(3, '(((.)))')
+24
+[(3, '(((.)))'), (2, '((.).).'), (2, '((..)).'), (2, '(.(.)).'), (2, '((.))..'), (2, '.((.)).'), (2, '.((.).)'), (2, '.((..))'), (2, '((..).)'), (2, '((.)..)')]
+------
+AUAACCUA
+(2, '.((...))')
+19
+[(2, '((.)..).'), (2, '(()...).'), (2, '()(...).'), (2, '().(..).'), (2, '()....()'), (2, '.()(..).'), (2, '.()...()'), (2, '.(.)..()'), (2, '.((...))'), (2, '.(.(..))')]
+------
+UUGGACUUG
+(4, '(()((.)))')
+129
+[(4, '(())(.)()'), (4, '(()((.)))'), (3, '(().)..()'), (3, '(().).(.)'), (3, '(().)(..)'), (3, '((.))..()'), (3, '((.)).(.)'), (3, '((.))(..)'), (3, '(())(..).'), (3, '(())(.)..')]
+------
+UUUGGCACUA
+(4, '(.()()(.))')
+179
+[(4, '((()).).()'), (4, '((.)()).()'), (4, '(.()()).()'), (4, '.(()()).()'), (4, '.(()()(.))'), (4, '((()).(.))'), (4, '((.)()(.))'), (4, '((()())..)'), (4, '(.()()(.))'), (3, '((()).)...')]
+------
+GAUGCCGUGUAGUCCAAAGACUUC
+(11, '(((()()((()(.))))((.))))')
+2977987
+[(11, '(()())(((()().))(((.))))'), (11, '(()())(((()()).)(((.))))'), (11, '(()())(((()(.)))(((.))))'), (11, '(()()()((()(.)))(((.))))'), (11, '(((()()((()().)))((.))))'), (11, '(((()()((()(.))))((.))))'), (11, '(()()()((()()).)(((.))))'), (11, '(()()()((()().))(((.))))'), (11, '(((()()((()()).))((.))))'), (10, '(()()()((()().).)((.))).')]
+------
+AGGCAUCAAACCCUGCAUGGGAGCG
+(10, '.(()())...((((()()))).())')
+560580
+[(10, '.(()())...((((())())).)()'), (10, '.(()())...((((()()))).)()'), (10, '.(()())...(((()(()))).)()'), (10, '.(()())...(((()(()))).())'), (10, '.(()())...((((())())).())'), (10, '.(()())...((((()()))).())'), (9, '((.).)(...(.((()()))).)()'), (9, '((.).)(...(((.)(()))).)()'), (9, '((.).)(...(.(()(()))).)()'), (9, '((.).)(...((.(()()))).)()')]
+------

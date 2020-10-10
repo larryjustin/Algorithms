@@ -1,0 +1,44 @@
+
+
+Textbooks for References:
+[1] KT Ch. 6.4
+    or Ch. 5.3 in a previous version:
+    http://cs.furman.edu/~chealy/cs361/kleinbergbook.pdf
+[2] KT slides for DP (pages 1-37):
+    https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/06DynamicProgrammingI.pdf
+[3] Wikipedia: Knapsack (unbounded and 0/1)
+[4] CLRS Ch. 15
+
+https://codereview.stackexchange.com/questions/20569/dynamic-programming-knapsack-solution
+https://www.geeksforgeeks.org/0-1-knapsack-problem-dp-10/
+https://www.guru99.com/knapsack-problem-dynamic-programming.html#5
+https://dev.to/downey/solving-the-knapsack-problem-with-dynamic-programming-4hce
+http://www.mafy.lut.fi/study/DiscreteOpt/DYNKNAP.pdf
+
+Please answer time/space complexities for each problem in report.txt.
+
+0. For each of the coding problems below:
+   (a) Describe a greedy solution.
+
+Unbounded Knapsack:
+    A greedy solution means finding the most valuable item first and choose that. If that doesnt fill
+    your bag, then repeat the process.
+
+Bounded Knapsack:
+    Similar idea to unbounded except you have to take the quantity of items into consideration.
+
+   (b) Show a counterexample to the greedy solution.
+   Brute force. Travelling salesmen problem.
+   (c) Define the DP subproblem
+   Break things down into a matrix.
+   (d) Write the recurrence relations
+   (e) Do not forget base cases
+   Okay
+   (f) Analyze the space and time complexities
+
+Unbounded Knapsack:
+    O(n^2)
+
+Bounded Knapsack:
+    O(n)
+

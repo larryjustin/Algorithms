@@ -1,0 +1,20 @@
+
+Textbooks for References:
+[1] CLRS Ch. 15
+[2] KT Ch. 6
+    or Ch. 5 in a previous version:
+    http://cs.furman.edu/~chealy/cs361/kleinbergbook.pdf
+
+
+1. [WILL BE GRADED]
+   Maximum Weighted Independent Set
+
+   [HINT] independent set is a set where no two numbers are neighbors in the original list.
+   	  see also https://en.wikipedia.org/wiki/Independent_set_(graph_theory)
+
+   input:  a list of numbers (could be negative)
+   output: a pair of the max sum and the list of numbers chosen
+
+   Q: What's the complexity?
+
+O(n)

@@ -1,0 +1,46 @@
+Please answer non-coding questions in report.txt.
+
+0. For the following graphs, decide whether they are
+   (1) directed or undirected, (2) dense or sparse, and (3) cyclic or acyclic:
+
+   A directed graph is a set of vertices connected by edges, with each node having a direction associated with it.
+   An undirected graph has edges that are unidirectional, with no direction associated with them.
+
+   A dense graph is a graph in which the number of edges is close to the maximal number of edges.
+   A sparse graph is a graph in which the number of edges is close to the minimal number of edges.
+
+   A cyclic graph is a graph containing at least one graph cycle. Cyclic graphs are not trees.
+   An acyclic graph is a graph that contains no graph cycles. Acyclic graphs are trees.
+
+   (a) Facebook
+   undirected, sparse and acyclic
+   (b) Twitter
+   undirected, sparse and acyclic
+   (c) a family
+   directed, sparse, and cyclic
+   (d) V=airports, E=direct_flights
+   directed, sparse, and acyclic
+   (e) a mesh
+   directed, sparse, and cyclic
+   (f) V=courses, E=prerequisites
+   undirected, sparse, and acyclic
+   (g) a tree
+   undirected, sparse, and acyclic
+   (h) V=linux_software_packages, E=dependencies
+   directed, sparse, and cyclic
+   (i) DP subproblems for 0-1 knapsack
+   directed, sparse, and acyclic
+
+   Can you name a very big dense graph?
+
+   Gene density in bacteria?
+
+1. Topological Sort
+
+   (a) did you realize that bottom-up implementations of DP use (implicit) topological orderings?
+       e.g., what is the topological ordering in your (or my) bottom-up bounded knapsack code?
+   Not at the time but it makes sense since it's a matrix.
+   (b) what about top-down implementations? what order do they use to traverse the graph?
+   Reverse topological order.
+   (c) does that suggest there is a top-down solution for topological sort as well?
+   Yes.

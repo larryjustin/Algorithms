@@ -1,0 +1,122 @@
+
+HW8 - Graphs (part I); DP (part III)
+
+
+Textbooks for References:
+[1] CLRS Ch. 23 (Elementary Graph Algorithms)
+[2] KT Ch. 3 (graphs), or Ch. 2 in this earlier version:
+    http://cs.furman.edu/~chealy/cs361/kleinbergbook.pdf
+[3] KT slides (highly recommend!):
+    https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/03Graphs.pdf
+[4] Jeff Erickson: Ch. 5 (Basic Graph Algorithms):
+    http://jeffe.cs.illinois.edu/teaching/algorithms/book/05-graphs.pdf
+[5] DPV Ch. 3, 4.2, 4.4, 4.7 (Dasgupta, Papadimitriou, Vazirani)
+    https://www.cs.berkeley.edu/~vazirani/algorithms/chap3.pdf (decomposition of graphs)
+    https://www.cs.berkeley.edu/~vazirani/algorithms/chap4.pdf (paths, shortest paths)
+[6] my advanced DP tutorial (up to page 16):
+    http://web.engr.oregonstate.edu/~huanlian/slides/COLING-tutorial-anim.pdf
+
+Please answer non-coding questions in report.txt.
+
+0. For the following graphs, decide whether they are
+   (1) directed or undirected, (2) dense or sparse, and (3) cyclic or acyclic:
+
+   (a) Facebook
+   (b) Twitter
+   (c) a family
+   (d) V=airports, E=direct_flights
+   (e) a mesh
+   (f) V=courses, E=prerequisites
+   (g) a tree
+   (h) V=linux_software_packages, E=dependencies
+   (i) DP subproblems for 0-1 knapsack
+
+   Can you name a very big dense graph?
+
+1. Topological Sort
+   
+   For a given directed graph, output a topological order if it exists.
+   
+   Tie-breaking: ARBITRARY tie-breaking. This will make the code 
+   and time complexity analysis a lot easier. 
+
+   e.g., for the following example:
+
+     0 --> 2 --> 3 --> 5 --> 6
+        /    \   |  /    \
+       /      \  v /      \
+     1         > 4         > 7
+
+   >>> order(8, [(0,2), (1,2), (2,3), (2,4), (3,4), (3,5), (4,5), (5,6), (5,7)])
+   [0, 1, 2, 3, 4, 5, 6, 7]
+
+   Note that order() takes two arguments, n and list_of_edges, 
+   where n specifies that the nodes are named 0..(n-1).
+
+   If we flip the (3,4) edge:
+
+   >>> order(8, [(0,2), (1,2), (2,3), (2,4), (4,3), (3,5), (4,5), (5,6), (5,7)])
+   [0, 1, 2, 4, 3, 5, 6, 7]
+
+   If there is a cycle, return None
+
+   >>> order(4, [(0,1), (1,2), (2,1), (2,3)])
+   None
+
+   Other cases:
+
+   >>> order(5, [(0,1), (1,2), (2,3), (3,4)])
+   [0, 1, 2, 3, 4]
+
+   >>> order(5, [])
+   [0, 1, 2, 3, 4]  # could be any order   
+
+   >>> order(3, [(1,2), (2,1)])
+   None
+
+   >>> order(1, [(0,0)]) # self-loop
+   None
+
+   Tie-breaking: arbitrary (any valid topological order is fine).
+   
+   filename: topol.py 
+
+   questions: 
+   (a) did you realize that bottom-up implementations of DP use (implicit) topological orderings?
+       e.g., what is the topological ordering in your (or my) bottom-up bounded knapsack code?
+   (b) what about top-down implementations? what order do they use to traverse the graph?
+   (c) does that suggest there is a top-down solution for topological sort as well? 
+
+2. [WILL BE GRADED]
+   Viterbi Algorithm For Longest Path in DAG (see DPV 4.7, [2], CLRS problem 15-1)
+   
+   Recall that the Viterbi algorithm has just two steps:
+   a) get a topological order (use problem 1 above)
+   b) follow that order, and do either forward or backward updates
+
+   This algorithm captures all DP problems on DAGs, for example,
+   longest path, shortest path, number of paths, etc.
+
+   In this problem, given a DAG (guaranteed acyclic!), output a pair (l, p) 
+   where l is the length of the longest path (number of edges), and p is the path. (you can think of each edge being unit cost)
+
+   e.g., for the above example:
+
+   >>> longest(8, [(0,2), (1,2), (2,3), (2,4), (3,4), (3,5), (4,5), (5,6), (5,7)])
+   (5, [0, 2, 3, 4, 5, 6])
+
+   >>> longest(8, [(0,2), (1,2), (2,3), (2,4), (4,3), (3,5), (4,5), (5,6), (5,7)])
+   (5, [0, 2, 4, 3, 5, 6]) 
+
+   >>> longest(8, [(0,1), (0,2), (1,2), (2,3), (2,4), (4,3), (3,5), (4,5), (5,6), (5,7), (6,7)])
+   (7, [0, 1, 2, 4, 3, 5, 6, 7])  # unique answer
+
+   Note that longest() takes two arguments, n and list_of_edges, 
+   where n specifies that the nodes are named 0..(n-1).
+
+   Tie-breaking: arbitrary. any longest path is fine.   
+
+   Filename: viterbi.py
+
+   Note: you can use this program to solve MIS, knapsacks, coins, etc.
+

@@ -1,0 +1,89 @@
+
+HW6 - DP (part 2)
+
+
+Textbooks for References:
+[1] KT Ch. 6.4
+    or Ch. 5.3 in a previous version:
+    http://cs.furman.edu/~chealy/cs361/kleinbergbook.pdf   
+[2] KT slides for DP (pages 1-37):
+    https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/06DynamicProgrammingI.pdf
+[3] Wikipedia: Knapsack (unbounded and 0/1)
+[4] CLRS Ch. 15
+
+Please answer time/space complexities for each problem in report.txt.
+
+0. For each of the coding problems below:
+   (a) Describe a greedy solution.
+   (b) Show a counterexample to the greedy solution.
+   (c) Define the DP subproblem 
+   (d) Write the recurrence relations
+   (e) Do not forget base cases
+   (f) Analyze the space and time complexities
+
+1. Unbounded Knapsack
+
+   You have n items, each with weight w_i and value v_i, and each has infinite copies.
+   **All numbers are positive integers.**
+   What's the best value for a bag of W?
+
+   >>> best(3, [(2, 4), (3, 5)])
+   (5, [0, 1])
+
+   the input to the best() function is W and a list of pairs (w_i, v_i).
+   this output means to take 0 copies of item 1 and 1 copy of item 2.
+
+   tie-breaking: *reverse* lexicographical: i.e., [1, 0] is better than [0, 1]:
+   (i.e., take as many copies from the first item as possible, etc.)
+
+   >>> best(3, [(1, 5), (1, 5)])
+   (15, [3, 0])
+
+   >>> best(3, [(1, 2), (1, 5)])
+   (15, [0, 3])
+
+   >>> best(3, [(1, 2), (2, 5)])
+   (7, [1, 1])
+
+   >>> best(58, [(5, 9), (9, 18), (6, 12)])
+   (114, [2, 4, 2])
+
+   >>> best(92, [(8, 9), (9, 10), (10, 12), (5, 6)])
+   (109, [1, 1, 7, 1])
+
+   Q: What are the time and space complexities?
+
+   filename: knapsack_unbounded.py
+
+2. [WILL BE GRADED] 
+   Bounded Knapsack
+
+   You have n items, each with weight w_i and value v_i, and has c_i copies.
+   **All numbers are positive integers.**
+   What's the best value for a bag of W?
+
+   >>> best(3, [(2, 4, 2), (3, 5, 3)])
+   (5, [0, 1])
+
+   the input to the best() function is W and a list of triples (w_i, v_i, c_i).
+
+   tie-breaking: same as in p1:
+
+   >>> best(3, [(1, 5, 2), (1, 5, 3)])
+   (15, [2, 1])
+
+   >>> best(3, [(1, 5, 1), (1, 5, 3)])
+   (15, [1, 2])
+
+   >>> best(20, [(1, 10, 6), (3, 15, 4), (2, 10, 3)])
+   (130, [6, 4, 1])
+
+   >>> best(92, [(1, 6, 6), (6, 15, 7), (8, 9, 8), (2, 4, 7), (2, 20, 2)])
+   (236, [6, 7, 3, 7, 2])
+
+   Q: What are the time and space complexities?
+
+   filename: knapsack_bounded.py
+
+   You are encouraged to come up with a few other testcases yourself to test your code!
+   
